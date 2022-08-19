@@ -8,6 +8,24 @@ import md5 from 'md5';
 
 let users = [];
 
+export const login = (req,res)=> {
+  const email   = req.body.email;
+  const password = req.body.password;
+
+  let sql = `SELECT * FROM bb_users WHERE email='${email}' AND password ='${md5(password)}'`;
+
+  db.query(sql, function(err, row, fields) {
+    if (err) {
+      res.status(500).send({ error: 'Something failed!' })
+    }
+    if(row.length){
+      res.json(row);
+    } else {
+      res.json('User not found.');
+    }
+    });
+  }
+
 export const getUsers = (req,res)=> {
 
 let sql = "SELECT * FROM bb_users";
