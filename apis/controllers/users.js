@@ -12,16 +12,16 @@ export const login = (req,res)=> {
   const email   = req.body.email;
   const password = req.body.password;
 
-  let sql = `SELECT * FROM bb_users WHERE email='${email}' AND password ='${md5(password)}'`;
+  let sql = `SELECT id,name,email,fk_role_id as role_id FROM bb_users WHERE email='${email}' AND password ='${md5(password)}'`;
 
   db.query(sql, function(err, row, fields) {
     if (err) {
       res.status(500).send({ error: 'Something failed!' })
     }
     if(row.length){
-      res.json(row);
+      res.json({'status':1,'message':`Your most welcome ${row[0].name}`,'token':uuid(),'data':row});
     } else {
-      res.json('User not found.');
+      res.json({'status':0,'message':'Invalid credentials, please try again.','data':null});
     }
     });
   }
